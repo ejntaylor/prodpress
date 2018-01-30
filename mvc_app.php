@@ -233,9 +233,18 @@ function wcpt_locate_template( $template_name, $template_path = '', $default_pat
 // auto setup url
 
 add_action('init', function() {
+
+	// get url path of current page
 	$url_path = trim(parse_url(add_query_arg(array()), PHP_URL_PATH), '/');
 
-	if ( $url_path === 'mvc' ) {
+	// check if custom mvc path set in wp-config.php
+	if (defined('MVC_PATH')) {
+		$path = MVC_PATH;
+	} else {
+		$path = 'mvc';
+	}
+
+	if ( $url_path === $path ) {
 		// load the file if exists
 		$load = plugin_dir_path( __FILE__ ) . 'page-mvc_app.php';
 
