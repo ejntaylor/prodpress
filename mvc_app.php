@@ -187,3 +187,64 @@ add_shortcode( 'mvc_app', 'mvc_app' );
 
 
 
+// locate template
+
+
+/**
+ * Locate template.
+ *
+ * Locate the called template.
+ * Search Order:
+ * 1. /themes/theme/woocommerce-plugin-templates/$template_name
+ * 2. /themes/theme/$template_name
+ * 3. /plugins/woocommerce-plugin-templates/templates/$template_name.
+ *
+ * @since 1.0.0
+ *
+ * @param 	string 	$template_name			Template to load.
+ * @param 	string 	$string $template_path	Path to templates.
+ * @param 	string	$default_path			Default path to template files.
+ * @return 	string 							Path to the template file.
+ */
+function wcpt_locate_template( $template_name, $template_path = '', $default_path = '' ) {
+	// Set variable to search in woocommerce-plugin-templates folder of theme.
+	if ( ! $template_path ) :
+		$template_path = 'woocommerce-plugin-templates/';
+	endif;
+	// Set default plugin templates path.
+	if ( ! $default_path ) :
+		$default_path = plugin_dir_path( __FILE__ ) . 'templates/'; // Path to the template folder
+	endif;
+	// Search template file in theme folder.
+	$template = locate_template( array(
+		$template_path . $template_name,
+		$template_name
+	) );
+	// Get plugins template file.
+	if ( ! $template ) :
+		$template = $default_path . $template_name;
+	endif;
+	return apply_filters( 'wcpt_locate_template', $template, $template_name, $template_path, $default_path );
+}
+
+
+
+
+// auto setup url
+
+add_action('init', function() {
+	$url_path = trim(parse_url(add_query_arg(array()), PHP_URL_PATH), '/');
+
+	if ( $url_path === 'mvc' ) {
+		// load the file if exists
+		$load = plugin_dir_path( __FILE__ ) . 'page-mvc_app.php';
+
+		//var_dump($load);
+
+		if ($load) {
+			//load_template($load);
+			include($load);
+			exit(); // just exit if template was found and loaded
+		}
+	}
+});
