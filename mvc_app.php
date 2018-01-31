@@ -245,15 +245,8 @@ add_action('init', function() {
 	}
 
 	if ( $url_path === $path ) {
-		// load the file if exists
-		$load = plugin_dir_path( __FILE__ ) . 'page-mvc_app.php';
-
-		//var_dump($load);
-
-		if ($load) {
-			//load_template($load);
-			include($load);
-			exit(); // just exit if template was found and loaded
-		}
+		// load the mvc app if exists
+		mvc_app();
+		exit(); // just exit if template was found and loaded
 	}
 });
