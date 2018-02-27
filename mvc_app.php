@@ -250,3 +250,24 @@ add_action('init', function() {
 		exit(); // just exit if template was found and loaded
 	}
 });
+
+
+
+
+// add WP Admin Button
+
+function mvc_admin_button($wp_admin_bar){
+	$args = array(
+		'id' => 'mvc-button',
+		'title' => 'MVC Welcome',
+		'href' => '/mvc-welcome/',
+		'meta' => array(
+			'class' => 'mvc-admin-button'
+		)
+	);
+	$wp_admin_bar->add_node($args);
+}
+
+add_action('admin_bar_menu', 'mvc_admin_button', 90);
+
+
