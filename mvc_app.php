@@ -136,12 +136,11 @@ function mvc_app( $route = NULL ) {
 		$controller_name = $route_slugs[0];
 	}
 
-
 	// use specified method in the route if not use default
 	$method_name = '';
 	if (isset($route_slugs[2])) {
 		$method_name = $route_slugs[2];
-	} elseif($route_slugs[1]) {
+	} elseif(isset($route_slugs[1])) {
 		$method_name = $route_slugs[1];
 	} else {
 		$method_name = 'default';
@@ -151,7 +150,7 @@ function mvc_app( $route = NULL ) {
 	// load controller
 	if (isset($route_slugs[2])) {
 		$controller_file = ABSPATH . 'wp-content/mvc_app/modules/' . $module_name . '/controllers/' . $controller_name . ".php";
-	} elseif($route_slugs[1]) {
+	} else {
 		$controller_file = ABSPATH . 'wp-content/mvc_app/controllers/' . $controller_name . ".php";
 	}
 
@@ -278,4 +277,5 @@ function mvc_admin_button($wp_admin_bar){
 }
 
 add_action('admin_bar_menu', 'mvc_admin_button', 90);
+
 
