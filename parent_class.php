@@ -11,6 +11,23 @@
 			
 		}
 
+		/**
+		 * Checks if a Module and returns module name
+		 *
+		 * @return string or false
+		 */
+
+		function check_module() {
+
+			if (isset($_GET['mvc_module_route'])) {
+				$route_slugs = explode('/', $_GET['mvc_module_route']);
+				return $route_slugs[0];
+			} else {
+				return false;
+			}
+
+		}
+
 		// method to load a model
 		function load_model($model) {
 			
@@ -23,9 +40,17 @@
 		
 		// method to load a view
 		function load_view($view, $data = NULL) {
-			
-			$view_path = ABSPATH . 'wp-content/mvc_app/views/' . $view . '.php';
-			
+
+			// check module exists
+			$module = $this->check_module();
+
+			// check if module
+			if ($module) {
+				$view_path = ABSPATH . 'wp-content/mvc_app/modules/' . $module . '/views/' . $view . '.php';
+			} else {
+				$view_path = ABSPATH . 'wp-content/mvc_app/views/' . $view . '.php';
+			}
+
 			if (isset($data)) {
 				extract($data);
 			}
@@ -52,6 +77,17 @@
 			
 			$this->$library = new $library;
 		
+		}
+
+
+		// method to load a module
+		function load_module($module) {
+
+			$module_path = ABSPATH . 'wp-content/mvc_app/modules/' . $module . '.php';
+			require_once($helper_path);
+
+			$this->$helper = new $helper;
+
 		}
 
 		

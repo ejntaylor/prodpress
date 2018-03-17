@@ -105,14 +105,19 @@ add_action( 'template_redirect', 'mvc_api_redirect' );
 function mvc_app( $route = NULL ) {
 
 
+
+
+
 	// get the route if not passed to this function
 	if ($route == NULL) {
 		$route = '';
-		if (isset($_GET['mvc_app_route'])) {
 
+		// check if module or app
+		if (isset($_GET['mvc_module_route'])) {
+			$route = $_GET['mvc_module_route'];
+		} elseif (isset($_GET['mvc_app_route'])) {
 			$route = $_GET['mvc_app_route'];
 		} else {
-
 			$route = "start";
 		}
 	}
@@ -121,21 +126,22 @@ function mvc_app( $route = NULL ) {
 	// breakdown the route
 	$route_slugs = explode('/', $route);
 
-
 	// if the first slug is empty go to the default route
 	if (!isset($route_slugs[0])) {
-
 		$controller_name = "start";
-
+	} elseif(isset($route_slugs[2])) {
+		$module_name = $route_slugs[0];
+		$controller_name = $route_slugs[1];
 	} else {
-
 		$controller_name = $route_slugs[0];
 	}
 
 
 	// use specified method in the route if not use default
 	$method_name = '';
-	if (isset($route_slugs[1])) {
+	if (isset($route_slugs[2])) {
+		$method_name = $route_slugs[2];
+	} elseif($route_slugs[1]) {
 		$method_name = $route_slugs[1];
 	} else {
 		$method_name = 'default';
@@ -143,8 +149,12 @@ function mvc_app( $route = NULL ) {
 
 
 	// load controller
+	if (isset($route_slugs[2])) {
+		$controller_file = ABSPATH . 'wp-content/mvc_app/modules/' . $module_name . '/controllers/' . $controller_name . ".php";
+	} elseif($route_slugs[1]) {
+		$controller_file = ABSPATH . 'wp-content/mvc_app/controllers/' . $controller_name . ".php";
+	}
 
-	$controller_file = ABSPATH . 'wp-content/mvc_app/controllers/' . $controller_name . ".php";
 
 	// check if the controller file exists
 
@@ -253,7 +263,6 @@ add_action('init', function() {
 
 
 
-
 // add WP Admin Button
 
 function mvc_admin_button($wp_admin_bar){
@@ -269,5 +278,4 @@ function mvc_admin_button($wp_admin_bar){
 }
 
 add_action('admin_bar_menu', 'mvc_admin_button', 90);
-
 
