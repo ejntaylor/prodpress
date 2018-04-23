@@ -1,6 +1,6 @@
 <?
 	
-	// mvc app parent class
+	// pp app parent class
 	
 	class pp_app_core {
 
@@ -19,8 +19,8 @@
 
 		function check_module() {
 
-			if (isset($_GET['mvc_module_route'])) {
-				$route_slugs = explode('/', $_GET['mvc_module_route']);
+			if (isset($_GET['pp_module_route'])) {
+				$route_slugs = explode('/', $_GET['pp_module_route']);
 				return $route_slugs[0];
 			} else {
 				return false;

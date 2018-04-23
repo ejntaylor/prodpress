@@ -1,20 +1,20 @@
 <?
 /*
-Plugin Name: MVC App
-Plugin URI: http://www.hazlitteastman.com
-Version: 1.2
-Author: Hazlitt Eastman
-Description: MVC application development plugin for WordPress
+Plugin Name: ProdPress
+Plugin URI: http://prod.press
+Version: 0.1
+Author: Hazlitt Eastman and Elliot Taylor
+Description: An MVC application development plugin for WordPress
 */
 
 
 
 //  Create php class for plugin
 if (!class_exists("pp_app_plugin")) {
-    class pp_app_plugin {
-	 	//constructor
-        function __construct() {
-        }
+	class pp_app_plugin {
+		//constructor
+		function __construct() {
+		}
 
 	}
 }
@@ -22,7 +22,7 @@ if (!class_exists("pp_app_plugin")) {
 //  Instantiate the plugin class
 
 if (class_exists("pp_app_plugin")) {
-    $pp_app_plugin = new pp_app_plugin();
+	$pp_app_plugin = new pp_app_plugin();
 }
 
 
@@ -46,56 +46,51 @@ add_filter('query_vars', 'add_query_vars_filter');
 
 
 // Include core class files
-
 include('parent_class.php');
 include('model_class.php');
 include('controller_class.php');
 include('view_class.php');
 include('helper_class.php');
 
-
-
 // enable sessions and kill them at log out
-
 add_action('init', 'start_session', 1);
 add_action('wp_logout', 'end_session');
 add_action('wp_login', 'end_session');
 
 function start_session() {
-    if(!session_id()) {
+	if(!session_id()) {
 
-       	session_start();
-    }
+		session_start();
+	}
 }
 
 function end_session() {
-    session_destroy ();
+	session_destroy ();
 }
 
 
 
-// add mvc api endpoint
+// add pp api endpoint
+function pp_api_endpoint() {
 
-function mvc_api_endpoint() {
-
-    add_rewrite_endpoint( 'mvc_api', EP_ALL );
+	add_rewrite_endpoint( 'pp_api', EP_ALL );
 }
-add_action( 'init', 'mvc_api_endpoint' );
+add_action( 'init', 'pp_api_endpoint' );
 
 
 
-// interupt Wordpress loading templates if /mvc_api/ is in the URL
+// interupt Wordpress loading templates if /pp_api/ is in the URL
 
-function mvc_api_redirect() {
-    global $wp_query;
+function pp_api_redirect() {
+	global $wp_query;
 
-    // if this is not a request for json or a singular object then bail
-    if ( ! isset( $wp_query->query_vars['mvc_api'] ) ) return;
+	// if this is not a request for json or a singular object then bail
+	if ( ! isset( $wp_query->query_vars['pp_api'] ) ) return;
 
 	pp_app();
-    exit;
+	exit;
 }
-add_action( 'template_redirect', 'mvc_api_redirect' );
+add_action( 'template_redirect', 'pp_api_redirect' );
 
 
 
@@ -113,8 +108,8 @@ function pp_app( $route = NULL ) {
 		$route = '';
 
 		// check if module or app
-		if (isset($_GET['mvc_module_route'])) {
-			$route = $_GET['mvc_module_route'];
+		if (isset($_GET['pp_module_route'])) {
+			$route = $_GET['pp_module_route'];
 		} elseif (isset($_GET['pp_app_route'])) {
 			$route = $_GET['pp_app_route'];
 		} else {
@@ -203,36 +198,20 @@ add_action('init', function() {
 	// get url path of current page
 	$url_path = trim(parse_url(add_query_arg(array()), PHP_URL_PATH), '/');
 
-	// check if custom mvc path set in wp-config.php
-	if (defined('MVC_PATH')) {
-		$path = MVC_PATH;
+	// check if custom pp path set in wp-config.php
+	if (defined('PP_SLUG')) {
+		$path = PP_SLUG;
 	} else {
-		$path = 'mvc';
+		$path = 'pp_app';
 	}
 
 	if ( $url_path === $path ) {
-		// load the mvc app if exists
+		// load the pp app if exists
 		pp_app();
 		exit(); // just exit if template was found and loaded
 	}
 });
 
 
-
-// add WP Admin Button
-
-function mvc_admin_button($wp_admin_bar){
-	$args = array(
-		'id' => 'mvc-button',
-		'title' => 'MVC Welcome',
-		'href' => '/mvc-welcome/',
-		'meta' => array(
-			'class' => 'mvc-admin-button'
-		)
-	);
-	$wp_admin_bar->add_node($args);
-}
-
-add_action('admin_bar_menu', 'mvc_admin_button', 90);
 
 

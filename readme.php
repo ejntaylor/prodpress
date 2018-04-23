@@ -8,7 +8,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
-					<h1>MCV App plugin notes</h1>
+					<h1>ProdPress plugin notes</h1>
 				</div>
 			</div>
 		</div>
