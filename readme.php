@@ -121,8 +121,8 @@ class alternative_model extends pp_app_model {
 
 					
 					<h2>Routing</h2>
-					<p>Routing to a controller method is done by setting the GET variable 'pp_app_route'. Example:</p>
-					<p>/?pp_app_route=alternative/show_name</p>
+					<p>Routing to a controller method is done by setting the GET variable 'pp_route'. Example:</p>
+					<p>/?pp_route=alternative/show_name</p>
 					<p>In this example the route is 'alternative/show_name'.  This will load the 'alternative' controller and execute the 'show_name' method.</p>
 					
 					<h3>Default route</h3>
