@@ -36,7 +36,7 @@ include($config_path);
 
 //  add custom query variables
 function add_query_vars_filter($vars){
-  $vars[] = "pp_app_route";
+  $vars[] = "pp_route";
   $vars[] = "role";
   $vars[] = "user_id";
   return $vars;
@@ -110,8 +110,8 @@ function pp_app( $route = NULL ) {
 		// check if module or app
 		if (isset($_GET['pp_module_route'])) {
 			$route = $_GET['pp_module_route'];
-		} elseif (isset($_GET['pp_app_route'])) {
-			$route = $_GET['pp_app_route'];
+		} elseif (isset($_GET['pp_route'])) {
+			$route = $_GET['pp_route'];
 		} else {
 			$route = "start";
 		}
