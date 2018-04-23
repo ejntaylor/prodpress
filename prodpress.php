@@ -166,14 +166,14 @@ function pp_app( $route = NULL ) {
 			$result = $pp_app->$method_name();
 		} else {
 
-			echo "Bunk!";
+			echo "<pre>ProdPress Error: No controller method found</pre>";
 
 		}
 
 
 	} else {
 
-		echo "Doh!";
+		echo "<pre>ProdPress Error: No controller file found</pre>";
 
 	}
 
