@@ -29,8 +29,33 @@ if (class_exists("pp_app_plugin")) {
 
 // load app config
 
+$GLOBALS['pp_routes'] = array();
 $config_path = ABSPATH . 'wp-content/pp_app/config/config.php';
 include($config_path);
+
+
+// first slug routing
+
+function pp_api_routes() {
+	
+	//explode the url
+	$slugs = explode('/', $_SERVER['REQUEST_URI']);
+	
+
+	// if there are any matching configured routes
+	foreach ($GLOBALS['pp_routes'] as $route) {
+		
+		if ($slugs[1] == $route) {
+	
+			// load the corresponding controller
+			pp_app($route);
+			
+			exit();
+		}
+	}
+			
+}
+add_action( 'init', 'pp_api_routes' );
 
 
 
