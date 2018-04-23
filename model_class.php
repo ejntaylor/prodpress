@@ -2,7 +2,7 @@
 	
 	// mvc app model class
 	
-	class mvc_app_model extends mvc_app_core {
+	class pp_app_model extends pp_app_core {
 
 		function __construct() {
 			

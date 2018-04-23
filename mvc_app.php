@@ -10,8 +10,8 @@ Description: MVC application development plugin for WordPress
 
 
 //  Create php class for plugin
-if (!class_exists("mvc_app_plugin")) {
-    class mvc_app_plugin {
+if (!class_exists("pp_app_plugin")) {
+    class pp_app_plugin {
 	 	//constructor
         function __construct() {
         }
@@ -21,22 +21,22 @@ if (!class_exists("mvc_app_plugin")) {
 
 //  Instantiate the plugin class
 
-if (class_exists("mvc_app_plugin")) {
-    $mvc_app_plugin = new mvc_app_plugin();
+if (class_exists("pp_app_plugin")) {
+    $pp_app_plugin = new pp_app_plugin();
 }
 
 
 
 // load app config
 
-$config_path = ABSPATH . 'wp-content/mvc_app/config/config.php';
+$config_path = ABSPATH . 'wp-content/pp_app/config/config.php';
 include($config_path);
 
 
 
 //  add custom query variables
 function add_query_vars_filter($vars){
-  $vars[] = "mvc_app_route";
+  $vars[] = "pp_app_route";
   $vars[] = "role";
   $vars[] = "user_id";
   return $vars;
@@ -92,7 +92,7 @@ function mvc_api_redirect() {
     // if this is not a request for json or a singular object then bail
     if ( ! isset( $wp_query->query_vars['mvc_api'] ) ) return;
 
-	mvc_app();
+	pp_app();
     exit;
 }
 add_action( 'template_redirect', 'mvc_api_redirect' );
@@ -102,7 +102,7 @@ add_action( 'template_redirect', 'mvc_api_redirect' );
 
 // instantiate the routed class
 
-function mvc_app( $route = NULL ) {
+function pp_app( $route = NULL ) {
 
 
 
@@ -115,8 +115,8 @@ function mvc_app( $route = NULL ) {
 		// check if module or app
 		if (isset($_GET['mvc_module_route'])) {
 			$route = $_GET['mvc_module_route'];
-		} elseif (isset($_GET['mvc_app_route'])) {
-			$route = $_GET['mvc_app_route'];
+		} elseif (isset($_GET['pp_app_route'])) {
+			$route = $_GET['pp_app_route'];
 		} else {
 			$route = "start";
 		}
@@ -149,9 +149,9 @@ function mvc_app( $route = NULL ) {
 
 	// load controller
 	if (isset($route_slugs[2])) {
-		$controller_file = ABSPATH . 'wp-content/mvc_app/modules/' . $module_name . '/controllers/' . $controller_name . ".php";
+		$controller_file = ABSPATH . 'wp-content/pp_app/modules/' . $module_name . '/controllers/' . $controller_name . ".php";
 	} else {
-		$controller_file = ABSPATH . 'wp-content/mvc_app/controllers/' . $controller_name . ".php";
+		$controller_file = ABSPATH . 'wp-content/pp_app/controllers/' . $controller_name . ".php";
 	}
 
 
@@ -162,13 +162,13 @@ function mvc_app( $route = NULL ) {
 		include $controller_file;
 
 		// instantiate object
-		$mvc_app = new $controller_name();
+		$pp_app = new $controller_name();
 
 		// check if method exists
-		if (($method_name != '') && (method_exists($mvc_app, $method_name)))  {
+		if (($method_name != '') && (method_exists($pp_app, $method_name)))  {
 
 			// execute method
-			$result = $mvc_app->$method_name();
+			$result = $pp_app->$method_name();
 		} else {
 
 			echo "Bunk!";
@@ -192,7 +192,7 @@ function mvc_app( $route = NULL ) {
 
 //  instantiate the routed class via a shortcode
 
-add_shortcode( 'mvc_app', 'mvc_app' );
+add_shortcode( 'pp_app', 'pp_app' );
 
 
 
@@ -212,7 +212,7 @@ add_action('init', function() {
 
 	if ( $url_path === $path ) {
 		// load the mvc app if exists
-		mvc_app();
+		pp_app();
 		exit(); // just exit if template was found and loaded
 	}
 });

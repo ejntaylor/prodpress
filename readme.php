@@ -21,9 +21,9 @@
 					<h2>File paths</h2>
 					<p>Here are the paths to models, views and controllers</p>
 					<ul>
-						<li>Models :  /wpcontent/mvc_app/models</li>
-						<li>Views :  /wpcontent/mvc_app/views</li>
-						<li>Controllers :  /wpcontent/mvc_app/controllers</li>
+						<li>Models :  /wpcontent/pp_app/models</li>
+						<li>Views :  /wpcontent/pp_app/views</li>
+						<li>Controllers :  /wpcontent/pp_app/controllers</li>
 					</ul>
 					
 					
@@ -40,7 +40,7 @@
 					<h3>Code:</h3>
 					<pre>
 			
-class alternative extends mvc_app_controller {
+class alternative extends pp_app_controller {
 
 	// this function executes whenever this class is loaded
 	function __construct() {
@@ -76,7 +76,7 @@ class alternative extends mvc_app_controller {
 					<h3>Code:</h3>
 					<pre>
 			
-class alternative_model extends mvc_app_model {
+class alternative_model extends pp_app_model {
 
 	function __construct() {
 		
@@ -121,19 +121,19 @@ class alternative_model extends mvc_app_model {
 
 					
 					<h2>Routing</h2>
-					<p>Routing to a controller method is done by setting the GET variable 'mvc_app_route'. Example:</p>
-					<p>/?mvc_app_route=alternative/show_name</p>
+					<p>Routing to a controller method is done by setting the GET variable 'pp_app_route'. Example:</p>
+					<p>/?pp_app_route=alternative/show_name</p>
 					<p>In this example the route is 'alternative/show_name'.  This will load the 'alternative' controller and execute the 'show_name' method.</p>
 					
 					<h3>Default route</h3>
 					<p>The default route is implemented by adding the following shortcode to a page:</p>
-					<p>[mvc_app]</p>
+					<p>[pp_app]</p>
 					<p>By default this loads the controller 'start.php' and calls the constructor method.</p>
 					
 					<h3>Example code:</h3>
 					<pre>
 
-class start extends mvc_app_controller {
+class start extends pp_app_controller {
 
 	function __construct() {
 		
