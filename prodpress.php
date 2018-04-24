@@ -27,11 +27,29 @@ if (class_exists("pp_app_plugin")) {
 
 
 
+// list controller files
+
+$files = array_slice(scandir($_SERVER['DOCUMENT_ROOT'] . '/wp-content/pp_app/controllers/'), 2);
+
+$GLOBALS['controllers'] = array();
+
+foreach ($files as $file){
+	
+	$fileinfo = pathinfo($file);
+	
+	if ($fileinfo["extension"] == "php") { 
+		$controllers[] = $fileinfo['filename'];
+	}
+	
+}
+
+
+
 // load app config
 
-$GLOBALS['pp_routes'] = array();
 $config_path = ABSPATH . 'wp-content/pp_app/config/config.php';
 include($config_path);
+
 
 
 // first slug routing
@@ -42,13 +60,15 @@ function pp_api_routes() {
 	$slugs = explode('/', $_SERVER['REQUEST_URI']);
 	
 
-	// if there are any matching configured routes
-	foreach ($GLOBALS['pp_routes'] as $route) {
+	// if there are any matching controllers
+	foreach ($GLOBALS['controllers'] as $route) {
 		
 		if ($slugs[1] == $route) {
 	
-			// load the corresponding controller
-			pp_app($route);
+			// trim slashes and load the corresponding controller and method
+			$uri = ltrim ($_SERVER['REQUEST_URI'], '/');
+			$uri = rtrim($uri, '/');
+			pp_app($uri);
 			
 			exit();
 		}
@@ -60,9 +80,9 @@ add_action( 'init', 'pp_api_routes' );
 
 
 //  add custom query variables
+
 function add_query_vars_filter($vars){
   $vars[] = "pp_route";
-  $vars[] = "role";
   $vars[] = "user_id";
   return $vars;
 }
@@ -71,13 +91,17 @@ add_filter('query_vars', 'add_query_vars_filter');
 
 
 // Include core class files
+
 include('parent_class.php');
 include('model_class.php');
 include('controller_class.php');
 include('view_class.php');
 include('helper_class.php');
 
+
+
 // enable sessions and kill them at log out
+
 add_action('init', 'start_session', 1);
 add_action('wp_logout', 'end_session');
 add_action('wp_login', 'end_session');
@@ -96,6 +120,7 @@ function end_session() {
 
 
 // add pp api endpoint
+
 function pp_api_endpoint() {
 
 	add_rewrite_endpoint( 'pp_api', EP_ALL );
@@ -119,16 +144,13 @@ add_action( 'template_redirect', 'pp_api_redirect' );
 
 
 
-
 // instantiate the routed class
 
 function pp_app( $route = NULL ) {
 
 
-
-
-
 	// get the route if not passed to this function
+
 	if ($route == NULL) {
 		$route = '';
 
@@ -144,9 +166,12 @@ function pp_app( $route = NULL ) {
 
 
 	// breakdown the route
+
 	$route_slugs = explode('/', $route);
 
+
 	// if the first slug is empty go to the default route
+	
 	if (!isset($route_slugs[0])) {
 		$controller_name = "start";
 	} elseif(isset($route_slugs[2])) {
@@ -156,7 +181,9 @@ function pp_app( $route = NULL ) {
 		$controller_name = $route_slugs[0];
 	}
 
+
 	// use specified method in the route if not use default
+	
 	$method_name = '';
 	if (isset($route_slugs[2])) {
 		$method_name = $route_slugs[2];
@@ -168,6 +195,7 @@ function pp_app( $route = NULL ) {
 
 
 	// load controller
+	
 	if (isset($route_slugs[2])) {
 		$controller_file = ABSPATH . 'wp-content/pp_app/modules/' . $module_name . '/controllers/' . $controller_name . ".php";
 	} else {
@@ -198,7 +226,7 @@ function pp_app( $route = NULL ) {
 
 	} else {
 
-		echo "<pre>ProdPress Error: No controller file found</pre>";
+		echo "<pre>ProdPress Error: No controller found</pre>";
 
 	}
 
