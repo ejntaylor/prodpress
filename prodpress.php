@@ -75,8 +75,26 @@ function pp_api_routes() {
 	}
 			
 }
-add_action( 'init', 'pp_api_routes' );
+add_action( 'init', 'pp_api_routes', 10 );
 
+
+// custom routes
+
+function pp_api_custom_routes_process($custom_routes) {
+	//explode the url
+	$slugs = explode('/', $_SERVER['REQUEST_URI']);
+
+	// loop through custom urls
+	foreach ($custom_routes as $custom_route => $controller_method) {
+		if ($slugs[1] == $custom_route) {
+			
+			// load the events controller
+			pp_app($controller_method);
+
+			exit();
+		}
+	}
+}
 
 
 //  add custom query variables
