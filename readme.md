@@ -1,4 +1,4 @@
-## ProdPress WordPress Plugin
+# ProdPress WordPress Plugin
 
 An MVC Framework for building applications with WordPress.
 
