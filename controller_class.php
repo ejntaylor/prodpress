@@ -10,4 +10,9 @@
 
 		}
 
+		public function module_name($dir) {
+			$module_name = basename(dirname($dir,1));
+			return $module_name;
+		}
+
 	}

@@ -59,10 +59,24 @@ function pp_api_routes() {
 	//explode the url
 	$slugs = explode('/', $_SERVER['REQUEST_URI']);
 	
+	// if module then just execute module code else continue to run controller code
+	if (isset($slugs[3])) {
 
-	// if there are any matching controllers
+			// trim slashes and load the corresponding controller and method
+			$uri = ltrim ($_SERVER['REQUEST_URI'], '/');
+			$uri = rtrim($uri, '/');
+			
+			pp_app($uri);
+
+		exit;
+	}
+
+
+	//  if there are any matching controllers
 	foreach ($GLOBALS['controllers'] as $route) {
+
 		
+
 		if ($slugs[1] == $route) {
 	
 			// trim slashes and load the corresponding controller and method
@@ -72,6 +86,9 @@ function pp_api_routes() {
 			
 			exit();
 		}
+
+
+	
 	}
 			
 }
@@ -87,7 +104,6 @@ function pp_api_custom_routes_process($custom_routes) {
 	// loop through custom urls
 	foreach ($custom_routes as $custom_route => $controller_method) {
 		if ($slugs[1] == $custom_route) {
-			
 			// load the events controller
 			pp_app($controller_method);
 
@@ -147,41 +163,15 @@ add_action( 'init', 'pp_api_endpoint' );
 
 
 
-// interupt Wordpress loading templates if /pp_api/ is in the URL
-
-function pp_api_redirect() {
-	global $wp_query;
-
-	// if this is not a request for json or a singular object then bail
-	if ( ! isset( $wp_query->query_vars['pp_api'] ) ) return;
-
-	pp_app();
-	exit;
-}
-add_action( 'template_redirect', 'pp_api_redirect' );
-
-
-
 // instantiate the routed class
 
 function pp_app( $route = NULL ) {
 
-
 	// get the route if not passed to this function
 
 	if ($route == NULL) {
-		$route = '';
-
-		// check if module or app
-		if (isset($_GET['pp_module_route'])) {
-			$route = $_GET['pp_module_route'];
-		} elseif (isset($_GET['pp_route'])) {
-			$route = $_GET['pp_route'];
-		} else {
-			$route = "start";
-		}
+		var_dump('No Route Set');
 	}
-
 
 	// breakdown the route
 
@@ -203,9 +193,13 @@ function pp_app( $route = NULL ) {
 	// use specified method in the route if not use default
 	
 	$method_name = '';
+
+	// module controller
 	if (isset($route_slugs[2])) {
 		$method_name = $route_slugs[2];
-	} elseif(isset($route_slugs[1])) {
+	}
+	// standard controller
+	elseif(isset($route_slugs[1])) {
 		$method_name = $route_slugs[1];
 	} else {
 		$method_name = 'default';
@@ -255,34 +249,6 @@ function pp_app( $route = NULL ) {
 	}
 
 }
-
-//  instantiate the routed class via a shortcode
-
-add_shortcode( 'pp_app', 'pp_app' );
-
-
-
-// auto setup url
-
-add_action('init', function() {
-
-	// get url path of current page
-	$url_path = trim(parse_url(add_query_arg(array()), PHP_URL_PATH), '/');
-
-	// check if custom pp path set in wp-config.php
-	if (defined('PP_SLUG')) {
-		$path = PP_SLUG;
-	} else {
-		$path = 'pp_app';
-	}
-
-	if ( $url_path === $path ) {
-		// load the pp app if exists
-		pp_app();
-		exit(); // just exit if template was found and loaded
-	}
-});
-
 
 
 
