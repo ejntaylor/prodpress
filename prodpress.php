@@ -171,15 +171,6 @@ function pp_app( $route = NULL ) {
 
 	if ($route == NULL) {
 		$route = '';
-
-		// check if module or app
-		if (isset($_GET['pp_module_route'])) {
-			$route = $_GET['pp_module_route'];
-		} elseif (isset($_GET['pp_route'])) {
-			$route = $_GET['pp_route'];
-		} else {
-			$route = "start";
-		}
 	}
 
 
@@ -193,7 +184,6 @@ function pp_app( $route = NULL ) {
 	if (!isset($route_slugs[0])) {
 		$controller_name = "start";
 	} elseif(isset($route_slugs[2])) {
-		$module_name = $route_slugs[0];
 		$controller_name = $route_slugs[1];
 	} else {
 		$controller_name = $route_slugs[0];
@@ -214,11 +204,8 @@ function pp_app( $route = NULL ) {
 
 	// load controller
 	
-	if (isset($route_slugs[2])) {
-		$controller_file = ABSPATH . 'wp-content/pp_app/modules/' . $module_name . '/controllers/' . $controller_name . ".php";
-	} else {
-		$controller_file = ABSPATH . 'wp-content/pp_app/controllers/' . $controller_name . ".php";
-	}
+	$controller_file = ABSPATH . 'wp-content/pp_app/controllers/' . $controller_name . ".php";
+
 
 
 	// check if the controller file exists
