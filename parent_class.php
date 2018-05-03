@@ -11,6 +11,21 @@
 			
 		}
 
+		function get_view_path($file) {
+
+			// check module
+			$module_name = $this->check_module();
+
+			if($module_name) {
+				$module = 'modules/' . $module_name . '/';
+			} else {
+				$module = null;
+			}
+
+			$return = WP_CONTENT_DIR . '/pp_app/' . $module . 'views/' . $file . '.php';
+			return $return;
+		}
+
 		/**
 		 * Checks if a Module and returns module name
 		 *
@@ -19,12 +34,15 @@
 
 		function check_module() {
 
-				$slugs = explode('/', $_SERVER['REQUEST_URI']);
+			$slugs = explode('/', $_SERVER['REQUEST_URI']);
 	
 			// if module then just execute module code else continue to run controller code
 			if (isset($slugs[3])) {
 				$module = $slugs[1];
+
 				return $module;
+
+
 			} else {				
 				return false;
 			}
