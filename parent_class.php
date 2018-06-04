@@ -34,12 +34,13 @@
 
 		function check_module() {
 
-			$slugs = explode('/', $_SERVER['REQUEST_URI']);
-	
-			// if module then just execute module code else continue to run controller code
-			if (isset($slugs[3])) {
-				$module = $slugs[1];
+			$backtrace = debug_backtrace()[1]['file'];
+			$backtrace_explode = preg_split("#/#", $backtrace); 
 
+
+			// if module then just execute module code else continue to run controller code
+			if ('modules' == $backtrace_explode[5]) {
+				$module = $backtrace_explode[6];
 				return $module;
 
 
@@ -131,15 +132,22 @@
 		function load_module($module) {
 
 			$module_path = ABSPATH . 'wp-content/pp_app/modules/' . $module . '.php';
-			require_once($helper_path);
+			require_once($module_path);
 
-			$this->$helper = new $helper;
+			$this->$module = new $module;
+
+		}
+
+				// method to load a module
+		function load_module_controller($module, $controller) {
+
+			$path = ABSPATH . 'wp-content/pp_app/modules/' . $module . '/controllers/' . $controller . '.php';
+			require_once($path);
+
+			$this->$controller = new $controller;
 
 		}
 
 
 
-	
-
-		
 	}
