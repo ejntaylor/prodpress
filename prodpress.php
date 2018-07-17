@@ -190,7 +190,7 @@ function pp_app( $route = NULL ) {
 	}
 
 
-	// use specified method in the route if not use default
+	// use specified method in the route if not use initial
 	
 	$method_name = '';
 	if (isset($route_slugs[2])) {
@@ -198,7 +198,7 @@ function pp_app( $route = NULL ) {
 	} elseif(isset($route_slugs[1])) {
 		$method_name = $route_slugs[1];
 	} else {
-		$method_name = 'default';
+		$method_name = 'initial';
 	}
 
 
