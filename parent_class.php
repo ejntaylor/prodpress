@@ -14,7 +14,7 @@
 		// method to load a model
 		function load_model($model) {
 			
-			$model_path = ABSPATH . 'wp-content/mvc_app/models/' . $model . '.php';
+			$model_path = ABSPATH . 'wp-content/pp_app/models/' . $model . '.php';
 			require_once($model_path);
 			
 			$this->$model = new $model;
