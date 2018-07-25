@@ -182,24 +182,27 @@ function pp_app( $route = NULL ) {
 	// if the first slug is empty go to the default route
 	
 	if (!isset($route_slugs[0])) {
+		
 		$controller_name = "start";
-	} elseif(isset($route_slugs[2])) {
-		$controller_name = $route_slugs[1];
+		
 	} else {
-		$controller_name = $route_slugs[0];
+		
+		$controller_name = $route_slugs[0];	
 	}
-
-
+	
+	
 	// use specified method in the route if not use initial
 	
 	$method_name = '';
-	if (isset($route_slugs[2])) {
-		$method_name = $route_slugs[2];
-	} elseif(isset($route_slugs[1])) {
+	if (isset($route_slugs[1])) {
+		
 		$method_name = $route_slugs[1];
+	
 	} else {
+		
 		$method_name = 'initial';
 	}
+
 
 
 	// load controller
